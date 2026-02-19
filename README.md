@@ -95,15 +95,31 @@ Transformers have revolutionized deep learning, but a critical question remains 
 </table>
 
 **Experimental Design:**
-```
-For each PE method:
-  ├─ Implement with identical transformer architecture
-  ├─ Train on datasets with varying sequence lengths:
-  │   ├─ SHORT (<128 tokens): SST-2, Twitter Sentiment
-  │   ├─ MEDIUM (128-512): AG News, Spam Detection
-  │   └─ LONG (>512 tokens): IMDB Reviews, DBpedia
-  ├─ Measure: Accuracy, F1, Training Time, Inference Latency
-  └─ Analyze: When does each method excel? When does it fail?
+
+```mermaid
+flowchart LR
+    A[PE Method] --> B[Identical Transformer<br/>Architecture]
+    B --> C[Train on Multiple<br/>Sequence Lengths]
+
+    C --> D1[SHORT<br/>&lt;128 tokens<br/>SST-2, Twitter]
+    C --> D2[MEDIUM<br/>128-512 tokens<br/>AG News, Spam]
+    C --> D3[LONG<br/>&gt;512 tokens<br/>IMDB, DBpedia]
+
+    D1 --> E[Measure Metrics]
+    D2 --> E
+    D3 --> E
+
+    E --> F1[Accuracy & F1]
+    E --> F2[Training Time]
+    E --> F3[Inference Latency]
+
+    F1 --> G[Analyze Performance<br/>Patterns]
+    F2 --> G
+    F3 --> G
+
+    style A fill:#e1f5ff
+    style E fill:#fff4e1
+    style G fill:#e1ffe1
 ```
 
 **Key Research Questions:**
@@ -120,31 +136,32 @@ For each PE method:
 
 #### APE Architecture:
 
-```
-                    Input Sequence
-                          ↓
-        ┌─────────────────────────────────────┐
-        │   Input Analyzer (Lightweight)      │
-        │   • Sequence length                 │
-        │   • Token statistics                │
-        │   • Complexity metrics              │
-        └─────────────────────────────────────┘
-                          ↓
-        ┌─────────────────────────────────────┐
-        │   Gating Network (Learnable)        │
-        │   • MLP with softmax output         │
-        │   • Produces mixing weights α       │
-        │   • α = [α_binary, α_sin, α_rope, α_learned] │
-        └─────────────────────────────────────┘
-                          ↓
-        ┌─────────────────────────────────────┐
-        │   Weighted PE Combination           │
-        │   PE_adaptive = Σ αᵢ × PEᵢ(x)      │
-        └─────────────────────────────────────┘
-                          ↓
-              Transformer Encoder/Decoder
-                          ↓
-                   Task-Specific Head
+```mermaid
+graph TD
+    A[Input Sequence] --> B[Input Analyzer]
+    B --> |Sequence length<br/>Token statistics<br/>Complexity metrics| C[Gating Network]
+    C --> |Softmax weights α| D[PE Methods Pool]
+
+    D --> E1[Binary PE]
+    D --> E2[Sinusoidal PE]
+    D --> E3[RoPE]
+    D --> E4[Learned PE]
+
+    E1 --> |α₁ × PE₁| F[Weighted Combination]
+    E2 --> |α₂ × PE₂| F
+    E3 --> |α₃ × PE₃| F
+    E4 --> |α₄ × PE₄| F
+
+    F --> |PE_adaptive = Σ αᵢ × PEᵢ| G[Transformer Encoder]
+    G --> H[Multi-Head Attention]
+    H --> I[Feed-Forward Network]
+    I --> J[Classification Head]
+    J --> K[Output Predictions]
+
+    style A fill:#e1f5ff
+    style C fill:#fff4e1
+    style F fill:#ffe1f5
+    style K fill:#e1ffe1
 ```
 
 #### Mathematical Formulation:
@@ -216,13 +233,28 @@ Given input sequence **x** with length **n**:
 
 **Architectures Compared:**
 
-```
-1. Standard Transformer + Binary PE
-2. Standard Transformer + Sinusoidal PE
-3. Standard Transformer + RoPE
-4. Standard Transformer + APE (ours)
-5. MoE Transformer + RoPE (best fixed PE)
-6. MoE Transformer + APE (ours - ultimate combination)
+```mermaid
+graph TB
+    subgraph Baseline["Standard Transformer Baselines"]
+        B1[Binary PE]
+        B2[Sinusoidal PE]
+        B3[RoPE]
+    end
+
+    subgraph Novel["Our Novel Approaches"]
+        N1[APE<br/>Adaptive PE]
+        style N1 fill:#ffe1f5
+    end
+
+    subgraph Advanced["MoE Extensions"]
+        M1[MoE + RoPE<br/>Best Fixed PE]
+        M2[MoE + APE<br/>Ultimate Model]
+        style M2 fill:#e1ffe1
+    end
+
+    Baseline -.comparison.-> Novel
+    Novel -.extension.-> Advanced
+    Baseline -.extension.-> Advanced
 ```
 
 **MoE-APE Synergy Hypothesis:**
