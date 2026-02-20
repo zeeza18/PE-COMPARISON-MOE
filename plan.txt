@@ -170,16 +170,18 @@ SECTION 7: RESEARCH PHASES (WHAT WE NEED TO DO)
 [DONE]  - Project initialization and literature review
 [DONE]  - Research design and positioning vs DAPE
 
-PHASE 1 — Individual PE Baselines (3 weeks)
+PHASE 1 — Individual PE Baselines (3 weeks)  [IN PROGRESS]
   Goal: Implement all 5 PE methods and run them on all 5 datasets
   Tasks:
-    - Implement Binary PE
-    - Implement RoPE
-    - Implement Learned PE
-    - Implement DAPE
-    - Sinusoidal PE already done (DEMO/AZEEZ_BINARY.ipynb)
-    - Set up unified training/evaluation framework
-    - Run each PE on each dataset with 5 random seeds
+    - [DONE] Implement Sinusoidal PE     -> PE/sinusoidal_pe.py
+    - [DONE] Implement Binary PE         -> PE/binary_pe.py
+    - [DONE] Implement RoPE              -> PE/rope.py
+    - [DONE] Implement Learned PE        -> PE/learned_pe.py
+    - [DONE] Implement DAPE              -> PE/dape.py
+    - [DONE] Demo notebooks per PE       -> DEMO/demo_*.ipynb
+    - [DONE] Experiment notebooks        -> experiments/dataset_*/experiment.ipynb
+    - [ ] Run experiments on all datasets (execute the notebooks)
+    - [ ] Record results (5 PEs x 5 datasets x 5 seeds)
   Output: Baseline results table (5 PEs x 5 datasets x 5 seeds)
 
 PHASE 2 — Analysis and Pattern Discovery (2 weeks)
